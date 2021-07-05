@@ -1,30 +1,35 @@
-import { useState, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react';
 
-const baseUrl = process.env.REACT_APP_API_BASE_URL
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
 export default function useFetch(url) {
-    const [data, setData] = useState(null)
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(true)
+  const isMounted = useRef(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function init() { 
-          try {
-            const res = await fetch(baseUrl + url)
-            if(res.ok) {
-                const json = await res.json()
-                setData(res)
-            } else {
-                throw res
-            }
-          } catch (e) {
-            setError(e)
-          } finally {
-            setLoading(false)
-          }
+  useEffect(() => {
+    isMounted.current = true;
+    async function init() {
+      try {
+        const res = await fetch(baseUrl + url);
+        if (res.ok) {
+          const json = await res.json();
+          if (isMounted.current) setData(res);
+        } else {
+          throw res;
         }
-        init()
-      }, [url])
+      } catch (e) {
+        if (isMounted.current) setError(e);
+      } finally {
+        if (isMounted.current) setLoading(false);
+      }
+    }
+    init();
+    return () => {
+      isMounted.current = false;
+    };
+  }, [url]);
 
-    return { data, error, loading }
+  return { data, error, loading };
 }
