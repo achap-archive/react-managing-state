@@ -2,8 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetchAll from './services/useFetchAll';
 import Spinner from './Spinner';
+import { useCart } from './cartContext';
 
-export default function Cart({ cart, dispatch }) {
+export default function Cart() {
+  const { cart, dispatch } = useCart();
   const navigate = useNavigate();
   const urls = cart.map((i) => `products/${i.id}`);
   const { data: products, loading, error } = useFetchAll(urls);
@@ -25,7 +27,13 @@ export default function Cart({ cart, dispatch }) {
           <p>
             <select
               aria-label={`Select quantity for ${name} size ${size}`}
-              onChange={(e) => dispatch({ type: 'updateQuantity', sku, quantity: parseInt(e.target.value) })}
+              onChange={(e) =>
+                dispatch({
+                  type: 'updateQuantity',
+                  sku,
+                  quantity: parseInt(e.target.value),
+                })
+              }
               value={quantity}>
               <option value='0'>Remove</option>
               <option value='1'>1</option>
