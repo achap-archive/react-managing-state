@@ -1,50 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import './App.css';
 import Footer from './Footer';
 import Header from './Header';
 import Products from './Products';
 import Detail from './Detail';
 import Cart from './Cart';
-import Checkout from './Checkout'
+import Checkout from './Checkout';
 import { Routes, Route } from 'react-router-dom';
+import cartReducer from './cartReduer';
+
+let initialCart;
+try {
+  initialCart = JSON.parse(localStorage.getItem('cart'));
+} catch (err) {
+  console.error('The cart could not be parsed into JSON.');
+  initialCart = [];
+}
 
 export default function App() {
-  const [cart, setCart] = useState(() => {
-    try {
-      JSON.parse(localStorage.getItem("cart"));
-    } catch (err) {
-      console.error("The cart could not be parsed into JSON.");
-      return [];
-    }
-  });
+  const [cart, dispatch] = useReducer(cartReducer, initialCart);
 
   useEffect(() => localStorage.setItem('cart', JSON.stringify(cart), [cart]));
-
-  function addToCart(id, sku) {
-    setCart((items) => {
-      const itemInCart = items.find((i) => i.sku === sku);
-      if (itemInCart) {
-        return items.map((i) =>
-          i.sku === sku ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      } else {
-        return [...items, { id, sku, quantity: 1 }];
-      }
-    });
-  }
-
-  function emptyCart() {
-    setCart([]);
-  }
-
-  function updateQuantity(sku, quantity) {
-    setCart((items) => {
-      if (quantity === 0) {
-        return items.filter((i) => i.sku !== sku);
-      }
-      return items.map((i) => (i.sku === sku ? { ...i, quantity } : i));
-    });
-  }
 
   return (
     <div>
@@ -56,10 +32,16 @@ export default function App() {
             <Route path='/:category' element={<Products />} />
             <Route
               path='/:category/:id'
-              element={<Detail addToCart={addToCart} />}
+              element={<Detail dispatch={dispatch} />}
             />
-            <Route path='/cart' element={<Cart cart={cart} />} />
-            <Route path='/checkout' element={<Checkout cart={cart} emptyCart={emptyCart} /> } />
+            <Route
+              path='/cart'
+              element={<Cart cart={cart} dispatch={dispatch} />}
+            />
+            <Route
+              path='/checkout'
+              element={<Checkout cart={cart} dispatch={dispatch} />}
+            />
           </Routes>
         </main>
       </div>
