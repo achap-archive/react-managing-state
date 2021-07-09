@@ -5,12 +5,13 @@ import Header from './Header';
 import Products from './Products';
 import Detail from './Detail';
 import Cart from './Cart';
-import Checkout from './Checkout';
+import Checkout from './Checkout.class';
 import { Routes, Route } from 'react-router-dom';
+import { useCart } from './cartContext';
 
 
 export default function App() {
-
+  const { dispatch } = useCart();
   return (
     <div>
       <div className='content'>
@@ -29,7 +30,7 @@ export default function App() {
             />
             <Route
               path='/checkout'
-              element={<Checkout />}
+              element={<Checkout dispatch={dispatch} />}
             />
           </Routes>
         </main>

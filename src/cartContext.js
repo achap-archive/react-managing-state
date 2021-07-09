@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect, useContext } from 'react';
 import cartReducer from './cartReducer';
 
-const cartContext = React.createContext(null);
+export const CartContext = React.createContext(null);
 
 let initialCart;
 try {
@@ -19,9 +19,9 @@ export function CartProvider(props) {
     dispatch,
   };
   return (
-    <cartContext.Provider value={contextValue}>
+    <CartContext.Provider value={contextValue}>
       {props.children}
-    </cartContext.Provider>
+    </CartContext.Provider>
   );
 }
 
