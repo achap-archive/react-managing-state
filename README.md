@@ -1,43 +1,43 @@
-## Managing React State
+# Managing React State
 [Pluralsight Course](https://app.pluralsight.com/library/courses/react-state-managing/table-of-contents)
 
 
-## Local State
-# Built in
+# Local State
+## Built in
 useState
 Class state
 useReducer
 refs
 Derived state in render()
-# Other
+## Other
 XState
 
-## Global State
-# Built in
+# Global State
+## Built in
 Lift state
 Context
-# Other
+## Other
 Redux
 MobX
 
-## Server State
+# Server State
 fetch
 Axios
-# Other
+## Other
 react-query
 swr
 Apollo
 Relay
 
-## Immutable State
-# Other
+# Immutable State
+## Other
 Immer
 
-## Form State
-# Built in
+# Form State
+## Built in
 State
 Event handlers
 Derived state
-# Other
+## Other
 Formik
 React Hook Form
